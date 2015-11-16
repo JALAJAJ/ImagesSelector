@@ -22,7 +22,7 @@ import java.util.concurrent.Semaphore;
 public class ImageLoader {
     //默认线程数
     private static final int DEFAULT_THREAD_COUNT=1;
-    private ImageLoader mImageLoader;
+    private static ImageLoader mImageLoader;
     //线程池
     private ExecutorService mThreadPool;
     //图片缓冲对象
@@ -105,11 +105,11 @@ public class ImageLoader {
      * 单例模式
      * @return
      */
-    public ImageLoader getInstance(){
+    public static ImageLoader getInstance(int threadCount,Type type){
         if (mImageLoader==null){
             synchronized (ImageLoader.class){
                 if(mImageLoader==null){
-                    mImageLoader=new ImageLoader(DEFAULT_THREAD_COUNT,Type.FIFO);
+                    mImageLoader=new ImageLoader(threadCount,type);
                 }
             }
         }
@@ -248,7 +248,7 @@ public class ImageLoader {
         }
         if (height<=0){
             //允许的最大宽度
-            height=getImageViewFieldValue(imageView,"mMaxHeight");
+            height=getImageViewFieldValue(imageView, "mMaxHeight");
         }
         if (height<=0){
             height=displayMetrics.heightPixels;
