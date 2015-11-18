@@ -6,7 +6,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.LruCache;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -127,23 +126,17 @@ public class ImageLoader {
     public void loadImage(final String path, final ImageView imageView){
         imageView.setTag(path);
         if (mUiHandler==null){
-            Log.i("mUiHandler==null",Thread.currentThread().getName());
             mUiHandler=new Handler(){
                 @Override
                 public void handleMessage(Message msg) {
                     //设置图片
-                    Log.i("mUiHandler","mUiHandler");
                     ImageBean  imageBean = (ImageBean) msg.obj;
                     String path = imageBean.path;
                     ImageView imageView = imageBean.imageView;
                     Bitmap bitmap = imageBean.bitmap;
                         //检验tag防止图片错位
-                    Log.i("bitmap","bitmap");
                     if (imageView.getTag().toString().equals(path)){
-                        Log.i("if","if");
-                        Log.i("loadImage",Thread.currentThread().getName());
                         imageView.setImageBitmap(bitmap);
-                        Log.i("setImageBitmap;","setImageBitmap");
                     }
 
                 }
@@ -151,44 +144,24 @@ public class ImageLoader {
         }
         Bitmap bitmap = getBitmapFromLruCache(path);
         if (bitmap!=null){
-            Log.i("bitmap!=null","bitmap!=null");
             refreshBitmap(path, imageView, bitmap);
         }else{
-            Log.i("else",Thread.currentThread().getName());
             addTask(new Runnable(){
                 @Override
                 public void run() {
-//                    /**
-//                     * 加载图片
-//                     */
-//                    //获取图片控件尺寸
-//                    ImageSize imageSize=getImageViewSize(imageView);
-//                    //图片压缩
-//                    Bitmap compressBitmap=compressBitmapFromPath(path,imageSize.width,imageSize.height);
-//                    //加入缓存
-//                    AddBitmapToLruCache(path,compressBitmap);
-//                    Log.i("addTask",Thread.currentThread().getName());
-//                    refreshBitmap(path, imageView, compressBitmap);
-//                    //释放一个信号量
-//                    mSemaphoreThreadPool.release();
-                    ImageSize imageSize = getImageViewSize(imageView);
-
-                    int reqWidth = imageSize.width;
-                    int reqHeight = imageSize.height;
-
-                    Bitmap bm = compressBitmapFromPath(path, reqWidth,
-                            reqHeight);
-                    AddBitmapToLruCache(path, bm);
-                    Log.i("addTask",Thread.currentThread().getName());
-                    ImageBean holder = new ImageBean();
-                    holder.bitmap = getBitmapFromLruCache(path);
-                    holder.imageView = imageView;
-                    holder.path = path;
-                    Message message = Message.obtain();
-                    message.obj = holder;
-                    // Log.e("TAG", "mHandler.sendMessage(message);");
-                    mUiHandler.sendMessage(message);
+                    /**
+                     * 加载图片
+                     */
+                    //获取图片控件尺寸
+                    ImageSize imageSize=getImageViewSize(imageView);
+                    //图片压缩
+                    Bitmap compressBitmap=compressBitmapFromPath(path,imageSize.width,imageSize.height);
+                    //加入缓存
+                    AddBitmapToLruCache(path,compressBitmap);
+                    refreshBitmap(path, imageView, compressBitmap);
+                    //释放一个信号量
                     mSemaphoreThreadPool.release();
+
                 }
             });
         }
@@ -214,7 +187,7 @@ public class ImageLoader {
         imageBean.bitmap=bitmap;
         Message msg = Message.obtain();
         msg.obj=imageBean;
-        mUiHandler.handleMessage(msg);
+        mUiHandler.sendMessage(msg);
     }
 
     /**

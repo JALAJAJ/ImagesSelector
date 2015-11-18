@@ -49,6 +49,8 @@ public class MainActivity extends Activity {
         imgPathList = Arrays.asList(currentFile.list());
         ImageAdapter imageAdapter = new ImageAdapter(this, imgPathList, currentFile.getAbsolutePath());
         gv_imgs.setAdapter(imageAdapter);
+        tv_dirCount.setText(currentCount+"");
+        tv_dirName.setText(currentFile.getName());
     }
 
     private ProgressDialog progressDialog;

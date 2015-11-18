@@ -6,6 +6,7 @@
     android:orientation="vertical">
 
     <GridView
+        android:background="#000000"
         android:cacheColorHint="@android:color/transparent"
         android:listSelector="@android:color/transparent"
         android:numColumns="3"
@@ -32,11 +33,19 @@
             android:textColor="#ffffff" />
 
         <TextView
+            android:layout_alignParentRight="true"
+            android:id="@+id/tv_zhang"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="张"
+            android:textColor="#ffffff" />
+        <TextView
+            android:layout_toLeftOf="@id/tv_zhang"
             android:id="@+id/tv_dirCount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
             android:text="100"
             android:textColor="#ffffff" />
+
     </RelativeLayout>
 </LinearLayout>
